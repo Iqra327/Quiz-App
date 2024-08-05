@@ -1,7 +1,5 @@
 const container = document.querySelector('.js-container');
-const question = document.querySelector('.js-questions');
-const choices = document.querySelector('.js-choices');
-const nextBtn = document.querySelector('.js-next-btn');
+
 
 const quiz = [
   {
@@ -26,4 +24,38 @@ const quiz = [
   }
 ];
 
+let currentIndex = 0;
 
+function quizSetup() {
+    const quizDetails = quiz[currentIndex];
+    const questionBox = document.querySelector('.js-questions');
+    questionBox.textContent = quizDetails.question;
+    
+    const choicesBox = document.querySelector('.js-choices');
+    
+    choicesBox.textContent = '';
+    for(let i = 0; i < quizDetails.choices.length; i++){
+        const currentChoice = quizDetails.choices[i];
+        const choiceDiv = document.createElement('div');
+        choiceDiv.textContent = currentChoice;
+        choiceDiv.classList.add('choice');
+        choicesBox.appendChild(choiceDiv);
+
+        choiceDiv.addEventListener('click', () => {
+            if(choiceDiv.classList.contains('selected')){
+                choiceDiv.classList.remove('selected');   
+            }
+            else{
+                choiceDiv.classList.add('selected');
+            }
+        })
+    }
+}
+quizSetup();
+
+document.querySelector('.js-next-btn').addEventListener('click', () => {
+    if(currentIndex < quiz.length){
+        currentIndex++;
+        quizSetup();
+    }
+});

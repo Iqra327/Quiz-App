@@ -13,3 +13,61 @@ body{
   display: grid;
   place-items: center;
 }
+
+.container{
+  width: 80%;
+  max-width:850px;
+  padding:30px;
+  text-align: center;
+}
+
+.container h1{
+  font-size: 36px;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+}
+
+.container .questions{
+  margin-top: 25px;
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.container .choice{
+  font-size: 20px;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: aliceblue;
+  color: #000000;
+  border-radius: 5px;
+  text-align: left;
+  width: 60%;
+  cursor: pointer;
+}
+
+.choice:hover{
+  background-color:rgb(184, 215, 246);
+}
+
+.container .btn{
+  width: 60%;
+  font-size: 24px;
+  padding: 12px 20px;
+  font-weight: bold;
+  margin: 20px auto 0 auto;
+  border-radius: 5px;
+  border: none;
+  color:rgb(255, 255, 255);
+  background-color:rgb(4, 75, 51); ;
+  box-shadow: 0px 0px 2px 0px;
+  cursor: pointer;
+}
+
+.btn:hover{
+  background-color: rgb(4, 48, 33);
+}
+
+.choice.selected{
+  background-color: rgb(5, 48, 72);
+  color: white;
+}
