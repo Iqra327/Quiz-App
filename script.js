@@ -1,6 +1,3 @@
-const container = document.querySelector('.js-container');
-
-
 const quiz = [
   {
       question: "Q. Which of the following is not a CSS box model property?",
@@ -25,6 +22,8 @@ const quiz = [
 ];
 
 let currentIndex = 0;
+let score = 0;
+let quizOver = false;
 
 function quizSetup() {
     const quizDetails = quiz[currentIndex];
@@ -48,14 +47,76 @@ function quizSetup() {
             else{
                 choiceDiv.classList.add('selected');
             }
-        })
+        });
+    };
+};
+
+function checkAnswer() {
+    const selectedChoice = document.querySelector('.choice.selected');
+    if(selectedChoice.textContent === quiz[currentIndex].answer){
+        score++;
+        displayAlert('Correct Answer!');
+    }else{
+        displayAlert(`Wrong answer! "${quiz[currentIndex].answer}" is the correct answer.`);
+    }
+
+    currentIndex++;
+    if(currentIndex < quiz.length){
+        quizSetup();
+    }else{
+        setTimeout(() => {
+            scoreOutput();
+            quizOver = true;
+        }, 2000);
     }
 }
-quizSetup();
 
-document.querySelector('.js-next-btn').addEventListener('click', () => {
-    if(currentIndex < quiz.length){
-        currentIndex++;
+function scoreOutput() {
+    document.querySelector('.js-questions').textContent = '';
+    document.querySelector('.js-choices').textContent = '';     
+    const displayScore = document.querySelector('.js-score-card');
+    displayScore.innerHTML = `You scored ${score} out of ${quiz.length}!`;
+    document.querySelector('.js-heading').innerText = 'Quiz Game Finish!';
+    nextBtn.innerText = 'Play again!';
+}
+
+//create alert
+let timeId;
+const alert = document.querySelector('.js-alert');
+function displayAlert(msg) {
+    alert.style.display = 'block';
+    alert.innerText = msg;
+    clearTimeout(timeId);
+    timeId = setTimeout(() => {    
+        alert.style.display = 'none';
+    }, 2000);
+}
+
+//start btn, click to start quiz
+const startBtn = document.querySelector('.js-start-btn');
+startBtn.addEventListener('click', () => {
+    document.querySelector('.js-container').style.display = 'block';    
+    startBtn.style.display = 'none';
+    quizSetup();
+})
+
+//next btn, click to move to next question and shows answers
+const nextBtn = document.querySelector('.js-next-btn');
+nextBtn.addEventListener('click', () => {
+    const selectedChoice = document.querySelector('.choice.selected');    
+    if(!selectedChoice && nextBtn.innerText === 'Next'){
+        displayAlert('Select your answer!');
+        return;
+    }
+    if(quizOver){
+        nextBtn.innerText = 'Next';
+        document.querySelector('.js-score-card').innerText = '';
+        currentIndex = 0;
         quizSetup();
+        quizOver = false;
+        score = 0;
+    }
+    else{
+        checkAnswer();
     }
 });
