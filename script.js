@@ -24,6 +24,7 @@ const quiz = [
 let currentIndex = 0;
 let score = 0;
 let quizOver = false;
+let timer = 20;
 
 function quizSetup() {
     const quizDetails = quiz[currentIndex];
@@ -49,6 +50,9 @@ function quizSetup() {
             }
         });
     };
+    if(currentIndex < quizDetails.length){
+        startTimer();
+    }
 };
 
 function checkAnswer() {
@@ -69,7 +73,7 @@ function checkAnswer() {
             quizOver = true;
         }, 2000);
     }
-}
+};
 
 function scoreOutput() {
     document.querySelector('.js-questions').textContent = '';
@@ -78,7 +82,7 @@ function scoreOutput() {
     displayScore.innerHTML = `You scored ${score} out of ${quiz.length}!`;
     document.querySelector('.js-heading').innerText = 'Quiz Game Finish!';
     nextBtn.innerText = 'Play again!';
-}
+};
 
 //create alert
 let timeId;
@@ -90,6 +94,15 @@ function displayAlert(msg) {
     timeId = setTimeout(() => {    
         alert.style.display = 'none';
     }, 2000);
+};
+
+let timeInterval;
+function startTimer(){
+    const timerDisplay = document.querySelector('.js-timer');
+    timeInterval = setInterval(() => {
+        timerDisplay.innerText = timer;
+        timer--;
+    }, 1000);
 }
 
 //start btn, click to start quiz
@@ -98,7 +111,7 @@ startBtn.addEventListener('click', () => {
     document.querySelector('.js-container').style.display = 'block';    
     startBtn.style.display = 'none';
     quizSetup();
-})
+});
 
 //next btn, click to move to next question and shows answers
 const nextBtn = document.querySelector('.js-next-btn');
