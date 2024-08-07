@@ -50,7 +50,7 @@ function quizSetup() {
             }
         });
     };
-    if(currentIndex < quizDetails.length){
+    if(currentIndex < quiz.length){
         startTimer();
     }
 };
@@ -64,6 +64,7 @@ function checkAnswer() {
         displayAlert(`Wrong answer! "${quiz[currentIndex].answer}" is the correct answer.`);
     }
 
+    timer = 20;
     currentIndex++;
     if(currentIndex < quiz.length){
         quizSetup();
@@ -72,6 +73,7 @@ function checkAnswer() {
             scoreOutput();
             quizOver = true;
         }, 2000);
+        clearInterval(timeInterval);
     }
 };
 
@@ -82,6 +84,7 @@ function scoreOutput() {
     displayScore.innerHTML = `You scored ${score} out of ${quiz.length}!`;
     document.querySelector('.js-heading').innerText = 'Quiz Game Finish!';
     nextBtn.innerText = 'Play again!';
+    timerDisplay.style.display = 'none';
 };
 
 //create alert
@@ -97,12 +100,37 @@ function displayAlert(msg) {
 };
 
 let timeInterval;
+const timerDisplay = document.querySelector('.js-timer');
 function startTimer(){
-    const timerDisplay = document.querySelector('.js-timer');
+    clearInterval(timeInterval);
+    timer = 20;
+    timerDisplay.innerText = timer;
     timeInterval = setInterval(() => {
-        timerDisplay.innerText = timer;
         timer--;
+        timerDisplay.innerText = timer;
+        if(timer < 0){
+            clearInterval(timeInterval);
+            const confirmUser = confirm('Time Up! Do you want to play again?');
+            if(confirmUser){
+                quizSetup();
+                timer = 20;
+            }else{
+                startBtn.style.display = 'block';
+                document.querySelector('.js-container').style.display = 'none';  
+                return;
+            }
+        }
     }, 1000);
+}
+
+//Shuffle questions
+function shuffleQuestion(){
+    for(let i = quiz.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [quiz[i], quiz[j]] = [quiz[j], quiz[i]];
+    }
+    currentIndex = 0;
+    quizSetup();
 }
 
 //start btn, click to start quiz
@@ -110,7 +138,9 @@ const startBtn = document.querySelector('.js-start-btn');
 startBtn.addEventListener('click', () => {
     document.querySelector('.js-container').style.display = 'block';    
     startBtn.style.display = 'none';
-    quizSetup();
+    shuffleQuestion();
+    timerDisplay.style.display = 'grid'; 
+    timer = 20;
 });
 
 //next btn, click to move to next question and shows answers
@@ -125,9 +155,11 @@ nextBtn.addEventListener('click', () => {
         nextBtn.innerText = 'Next';
         document.querySelector('.js-score-card').innerText = '';
         currentIndex = 0;
-        quizSetup();
         quizOver = false;
         score = 0;
+        timerDisplay.style.display = 'grid';
+        timer = 20;
+        quizSetup();
     }
     else{
         checkAnswer();
