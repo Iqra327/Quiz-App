@@ -6,6 +6,7 @@ let quizOver = false;
 let timer = 20;
 
 function quizSetup() {
+    document.querySelector('.js-heading').innerText = "Let's play a Quiz Game"
     const quizDetails = quiz[currentIndex];
     const questionBox = document.querySelector('.js-questions');
     questionBox.textContent = quizDetails.question;
